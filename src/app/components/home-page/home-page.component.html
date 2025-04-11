@@ -1,0 +1,84 @@
+<div class="approval-container">
+    <h1>Code Assignment: Task Approval</h1>
+  
+    <div class="card">
+      <h2>Start New Approval</h2>
+      <div class="alert alert-success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+    
+      <div class="alert alert-danger" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+      <form [formGroup]="approvalForm" (ngSubmit)="startApproval()">
+        <div class="form-group">
+          <label for="userEmail">
+            User's Email 
+            </label>
+          <input 
+            type="email" 
+            id="userEmail" 
+            formControlName="userEmail" 
+            placeholder="Enter your email"
+            [class.is-invalid]="approvalForm.get('userEmail')?.touched && approvalForm.get('userEmail')?.invalid"
+          >
+          <div class="error-message" *ngIf="approvalForm.get('userEmail')?.touched && approvalForm.get('userEmail')?.errors?.['required']">
+            Email is required
+          </div>
+          <div class="error-message" *ngIf="approvalForm.get('userEmail')?.touched && approvalForm.get('userEmail')?.errors?.['email']">
+            Please enter a valid email
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="taskName">Task Name</label>
+          <input 
+            type="text" 
+            id="taskName" 
+            formControlName="taskName" 
+            placeholder="Enter task name"
+            [class.is-invalid]="approvalForm.get('taskName')?.touched && approvalForm.get('taskName')?.invalid"
+          >
+          <div class="error-message" *ngIf="approvalForm.get('taskName')?.touched && approvalForm.get('taskName')?.errors?.['required']">
+            Task name is required
+          </div>
+        </div>
+  
+        <div class="button-group">
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="isSubmitting || (currentInstanceId !== null)"
+          >
+            Start Approval
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <div class="card" *ngIf="currentInstanceId">
+      <h2>Active Approval Process</h2>
+      <p>Approval instance ID: {{ currentInstanceId }}</p>
+      
+      <div class="button-group">
+        <button 
+          type="button" 
+          class="btn btn-success" 
+          (click)="approve()" 
+          [disabled]="isSubmitting"
+        >
+          Approve
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-danger" 
+          (click)="reject()" 
+          [disabled]="isSubmitting"
+        >
+          Reject
+        </button>
+      </div>
+    </div>
+  
+   
+  </div>
