@@ -20,12 +20,12 @@
             id="userEmail" 
             formControlName="userEmail" 
             placeholder="Enter your email"
-            [class.is-invalid]="approvalForm.get('userEmail')?.touched && approvalForm.get('userEmail')?.invalid"
+            [class.is-invalid]="isFieldInvalid('userEmail')"
           >
-          <div class="error-message" *ngIf="approvalForm.get('userEmail')?.touched && approvalForm.get('userEmail')?.errors?.['required']">
+          <div class="error-message" *ngIf="isFieldInvalid('userEmail') && approvalForm.get('userEmail')?.errors?.['required']">
             Email is required
           </div>
-          <div class="error-message" *ngIf="approvalForm.get('userEmail')?.touched && approvalForm.get('userEmail')?.errors?.['email']">
+          <div class="error-message" *ngIf="isFieldInvalid('userEmail') && approvalForm.get('userEmail')?.errors?.['email']">
             Please enter a valid email
           </div>
         </div>
@@ -37,9 +37,9 @@
             id="taskName" 
             formControlName="taskName" 
             placeholder="Enter task name"
-            [class.is-invalid]="approvalForm.get('taskName')?.touched && approvalForm.get('taskName')?.invalid"
+            [class.is-invalid]="isFieldInvalid('taskName')"
           >
-          <div class="error-message" *ngIf="approvalForm.get('taskName')?.touched && approvalForm.get('taskName')?.errors?.['required']">
+          <div class="error-message" *ngIf="isFieldInvalid('taskName') && approvalForm.get('taskName')?.errors?.['required']">
             Task name is required
           </div>
         </div>
