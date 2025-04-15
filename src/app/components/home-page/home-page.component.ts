@@ -5,7 +5,7 @@ import { ApprovalRequest } from '../../models/approval-request';
 import { CommonModule } from '@angular/common';
 import { MESSAGES } from '../../constants/messages.constants';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, finalize } from 'rxjs/operators';
 
 export const STORAGE_KEY_CURRENT_INSTANCE_ID = 'currentInstanceId';
 
@@ -84,16 +84,19 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.errorMessage = null;
 
       this.approvalService.approve(this.currentInstanceId)
-        .pipe(takeUntil(this.destroyed$))
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isSubmitting = false;
+            localStorage.removeItem(STORAGE_KEY_CURRENT_INSTANCE_ID);
+          }))
         .subscribe({
           next: () => {
-            this.isSubmitting = false;
             this.successMessage = MESSAGES.SUCCESS_APPROVE;
             this.currentInstanceId = null;
             localStorage.removeItem(STORAGE_KEY_CURRENT_INSTANCE_ID);
           },
           error: (error) => {
-            this.isSubmitting = false;
             this.errorMessage = `${MESSAGES.ERROR_APROVE} ${error.message}`;
           }
         });
@@ -109,16 +112,19 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.errorMessage = null;
 
       this.approvalService.reject(this.currentInstanceId)
-        .pipe(takeUntil(this.destroyed$))
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isSubmitting = false;
+            localStorage.removeItem(STORAGE_KEY_CURRENT_INSTANCE_ID);
+          })
+        )
         .subscribe({
           next: () => {
-            this.isSubmitting = false;
             this.successMessage = MESSAGES.SUCCESS_REJECT;
             this.currentInstanceId = null;
-            localStorage.removeItem(STORAGE_KEY_CURRENT_INSTANCE_ID);
           },
           error: (error) => {
-            this.isSubmitting = false;
             this.errorMessage = `${MESSAGES.ERROR_REJECT} ${error.message}`;
           }
         });
